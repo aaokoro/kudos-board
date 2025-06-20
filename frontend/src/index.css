@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light/Dark Mode Styles */
+.light-mode {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --box-bg: #ffffff;
+  --border-color: #dee2e6;
+  --header-bg: #e9ecef;
+}
+
+.dark-mode {
+  --bg-color: #000000;
+  --text-color: #FFFFFF;
+  --box-bg: #000000;
+  --border-color: #333333;
+  --header-bg: #333333;
+}
+
+body {
+  @apply transition-colors duration-300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
