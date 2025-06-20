@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.API_URL;
 
 const createHeaders = (contentType = true) => {
   return contentType ? { 'Content-Type': 'application/json' } : {};
