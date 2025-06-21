@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "build": "npm install && prisma generate && prisma migrate reset --force && prisma migrate dev"
   },
   "keywords": [],
   "author": "",
