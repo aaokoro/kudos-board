@@ -1,1 +1,0 @@
-DATABASE_URL="postgresql://aaokoro@localhost:5432/kudosboard?schema=public"DATABASE_URL="postgresql://$(whoami)@localhost:5432/kudosboard?schema=public"

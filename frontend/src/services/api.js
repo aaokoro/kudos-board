@@ -1,4 +1,4 @@
-const API_URL = import.meta.API_URL;
+const API_URL = 'https://kudos-board-mifc.onrender.com//api';
 
 const createHeaders = (contentType = true) => {
   return contentType ? { 'Content-Type': 'application/json' } : {};
