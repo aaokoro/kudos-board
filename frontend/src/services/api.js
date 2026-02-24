@@ -1,4 +1,4 @@
-const API_URL = 'https://kudos-board-mifc.onrender.com/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 const createHeaders = (contentType = true) => {
   return contentType ? { 'Content-Type': 'application/json' } : {};

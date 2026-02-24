@@ -77,5 +77,5 @@ echo "Frontend: http://localhost:3001"
 echo ""
 echo "Press Ctrl+C to stop both servers."
 
-# Wait for user to press Ctrl+C
-waitcd /Users/aaokoro/kudos-boardcd /Users/aaokoro/kudos-boardcd /Users/aaokoro/kudos-boardcd /Users/aaokoro/kudos-board
+# Wait for either server to exit or user to press Ctrl+C
+wait $BACKEND_PID $FRONTEND_PID
