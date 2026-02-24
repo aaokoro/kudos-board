@@ -1,62 +1,45 @@
-import React, { useState, useEffect } from "react";
-import * as giphyService from "../services/giphy";
+import React, { useState } from "react";
+
+// Hard-coded Aggie Pride themed GIFs/images (no external API calls)
+const AGGIE_GIFS = [
+  {
+    id: "aggie-1",
+    title: "Aggie Pride!",
+    url: "https://media.giphy.com/media/3o6Zt6KHxJTbX20WTS/giphy.gif",
+  },
+  {
+    id: "aggie-2",
+    title: "Blue & Gold Energy",
+    url: "https://media.giphy.com/media/xTiN0L7EW5trfOvEk0/giphy.gif",
+  },
+  {
+    id: "aggie-3",
+    title: "Victory on The Yard",
+    url: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif",
+  },
+  {
+    id: "aggie-4",
+    title: "Celebration Band",
+    url: "https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif",
+  },
+  {
+    id: "aggie-5",
+    title: "Blue & Gold March",
+    url: "https://media.giphy.com/media/l2JJrEx9aRsjNruhi/giphy.gif",
+  },
+  {
+    id: "aggie-6",
+    title: "Homecoming Vibes",
+    url: "https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif",
+  },
+];
 
 const GiphySelector = ({ onSelect, currentImage, onClear }) => {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showTrending, setShowTrending] = useState(false);
 
-  useEffect(() => {
-    if (!currentImage && !results.length) {
-      loadTrendingGifs();
-    }
-  }, [currentImage, results.length]);
-
-  const loadTrendingGifs = async () => {
-    setIsSearching(true);
-    setShowTrending(true);
-    try {
-      const data = await giphyService.getTrendingGifs(12);
-      const formattedGifs = giphyService.formatGifData(data);
-      setResults(formattedGifs);
-    } catch (error) {
-      console.error("Error loading trending GIFs:", error);
-      setResults(giphyService.fallbackGifs.map((url, i) => ({
-        id: `fallback-${i}`,
-        title: `Fallback GIF ${i+1}`,
-        url: url,
-        originalUrl: url
-      })));
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  const handleSearch = async () => {
-    if (!search.trim()) {
-      return;
-    }
-
-    setIsSearching(true);
-    setShowTrending(false);
-
-    try {
-      const data = await giphyService.searchGifs(search, 12);
-      const formattedGifs = giphyService.formatGifData(data);
-      setResults(formattedGifs);
-    } catch (error) {
-      console.error("Error searching GIFs:", error);
-      setResults(giphyService.fallbackGifs.map((url, i) => ({
-        id: `fallback-${i}`,
-        title: `Fallback GIF ${i+1}`,
-        url: url,
-        originalUrl: url
-      })));
-    } finally {
-      setIsSearching(false);
-    }
-  };
+  const filteredGifs = AGGIE_GIFS.filter((gif) =>
+    gif.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   if (currentImage) {
     return (
@@ -65,7 +48,7 @@ const GiphySelector = ({ onSelect, currentImage, onClear }) => {
           src={currentImage}
           alt="Selected GIF"
           className="w-full h-32 object-cover rounded-md"
-          onError={e => { e.target.src = giphyService.fallbackGifs[0]; }}
+          onError={e => { e.target.src = AGGIE_GIFS[0].url; }}
         />
         <button
           onClick={onClear}
@@ -81,61 +64,33 @@ const GiphySelector = ({ onSelect, currentImage, onClear }) => {
       <div className="flex">
         <input
           type="text"
-          placeholder="Search for a GIF..."
+          placeholder="Search Aggie GIFs..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          onKeyPress={e => e.key === 'Enter' && handleSearch()}
-          className="flex-1 px-3 py-2 border rounded-l-md text-black"
+          className="w-full px-3 py-2 border rounded-md text-black"
         />
-        <button
-          onClick={handleSearch}
-          className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700"
-        >
-          Search
-        </button>
       </div>
 
-      {isSearching ? (
-        <div className="text-center py-4">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="mt-2">Searching for GIFs...</p>
-        </div>
-      ) : results.length > 0 ? (
-        <div className="mt-2">
-          {showTrending && (
-            <p className="text-sm text-gray-500 mb-2">Trending GIFs</p>
-          )}
+      <div className="mt-2">
+        {filteredGifs.length === 0 ? (
+          <div className="text-center py-2 text-sm text-gray-500">
+            No Aggie GIFs match that search.
+          </div>
+        ) : (
           <div className="grid grid-cols-3 gap-2">
-            {results.map(gif => (
+            {filteredGifs.map(gif => (
               <img
                 key={gif.id}
                 src={gif.url}
-                alt={gif.title || "GIF"}
+                alt={gif.title}
+                title={gif.title}
                 className="w-full h-20 object-cover cursor-pointer border-2 border-transparent hover:border-blue-500 rounded-md"
-                onClick={() => {
-                  onSelect(gif.originalUrl || gif.url);
-                  setResults([]);
-                  setSearch("");
-                }}
-                onError={e => { e.target.src = giphyService.fallbackGifs[0]; }}
+                onClick={() => onSelect(gif.url)}
+                onError={e => { e.target.src = AGGIE_GIFS[0].url; }}
               />
             ))}
           </div>
-        </div>
-      ) : (
-        <div className="text-center py-2 text-sm text-gray-500">
-          {search ? "No results found. Try a different search term." : "Search for GIFs or enter a URL below."}
-        </div>
-      )}
-
-      <div className="mt-2">
-        <p className="text-sm text-gray-500 mb-1">Or enter a GIPHY URL directly:</p>
-        <input
-          type="url"
-          placeholder="https://media.giphy.com/media/..."
-          onChange={e => onSelect(e.target.value)}
-          className="w-full px-3 py-2 border rounded-md text-black"
-        />
+        )}
       </div>
     </>
   );
